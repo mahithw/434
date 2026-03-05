@@ -1,0 +1,1121 @@
+---
+title: "DAT 301 Module 2 Notes"
+---
+
+## 2.1 Control Structures 
+
+Control Structures (“blocks”) allow you to control the flow of execution of the program, depending on appropriate condiditons.
+
+
+##### if, else if, else
+Syntax:
+```{r, eval=FALSE}
+if (test_expression) {
+  statement
+}
+```
+
+If the `test expression` is `true` then the statement gets executed.  If the `test expression` is `false` then nothing happens.  Here, `test_expression` can be a logical or a numeric vector but only the first element is taken into consideration.
+
+*Examples*:
+```{r}
+x <- 5
+if (x > 0) {
+  print("Positive Number")
+}
+
+x <- -5
+if (x > 0) {
+  print("Positive Number")
+}
+```
+
+
+##### if, else statement
+Syntax:
+```{r, eval=FALSE}
+if (test_expression) {
+  statement1
+} else {
+    statement2
+}
+```
+
+The `else` part is optional and is only evaluated if `test_expression` is `false`  Note:  It is important to note that `else` must be in the same line as the closing braces of the `if` statement.
+
+```{r}
+x <- c(0, 1, 1, 2, 3, 5, 8, 13)
+if(length(x) > 5) {
+  print("x has more than 5 components")
+} else {
+  print("x does not have more than 5 components")
+}
+
+## single line
+
+if(length(x) > 5) print("x has more than 5 components") else print("x does not have more than 5 components")
+
+## single line example 2
+
+x <- -5
+y <- if(x > 0) 5 else 6
+y
+```
+
+
+##### if, else ladder
+The if…else ladder (if…else…if) statement allows you execute a block of code among more than 2 alternatives
+
+Syntax:
+```{r eval=FALSE}
+if ( test_expression1) {
+statement1
+} else if ( test_expression2) {
+statement2
+} else if ( test_expression3) {
+statement3
+} else {
+statement4
+}
+```
+
+Only one statement will get executed depending upon the test_expressions.
+
+```{r}
+df <- cars
+nrow(df)
+if(nrow(df) > 100) {
+  print("the df has at least 100 rows")
+} else if (nrow(df) >= 50 & length(df) < 100) {
+  print("the df has at least 50 but less than 100 rows")
+} else
+  print("the df has less than 50 rows")
+```
+
+Alternative:
+`ifelse(test_expression, x, y)` function
+
+```{r}
+dim(cars)[1]
+ifelse(dim(cars)[1] >= 100, "at least 100 rows", "less than 100 rows")
+```
+
+
+*Exercise*:
+Can you build an if-else statement that prints "A" if the exam score is in [90, 100], "B" if the exam score is in [80, 90), "C" if the exam score is in [70, 80), "D" if the exam score is in [60, 70) otherwise "E"?  Let variable "x" be the exam score.
+
+```{r}
+
+```
+
+##### for
+Loops are used in programming to repeat a specific block of code.  A for loop is used to iterate over a vector in R programming.
+
+Syntax:
+```{r eval=FALSE}
+for (val in sequence)
+{
+  statement
+}
+```
+
+Here, `sequence` is a vector and `val` takes on each of its values during the loop. In each iteration, `statement` is evaluated.
+
+*Example*:  count the number of even numbers in a vector.
+In the below example, the loop iterates 7 times as the vector `x` has 7 elements.  In each iteration, `val` takes on the value of corresponding element of `x`.  We have used a counter to count the number of even numbers in `x`. We can see that `x` contains 3 even numbers.
+
+```{r}
+x <- c(2, 5, 3, 9, 8, 11, 6)
+count <- 0
+for (val in x) {
+  if(val %% 2 == 0) count = count+1
+}
+print(count)
+```
+
+
+##### while
+Executes a loop while condition is true
+
+Syntax:
+```{r eval=FALSE}
+while (test_expression)
+{
+  statement
+}
+```
+
+Here, `test_expression` is evaluated and the body of the loop is entered if the result is `true`.  The statements inside the loop are executed and the flow returns to evaluate the `test_expression` again.  This is repeated each time until `test_expression` evaluates to `false`, in which case, the loop exits.
+
+*Example*:
+In this example, `i` is initially initialized to 1.  Here, the `test_expression` is i < 6 which evaluates to `true` since 1 is less than 6. So, the body of the loop is entered and `i` is printed and incremented.  Incrementing `i` is important as this will eventually meet the exit condition. Failing to do so will result into an infinite loop.  In the next iteration, the value of `i` is 2 and the loop continues.  This will continue until `i` takes the value 6. The condition 6 < 6 will give `false` and the while loop finally exits.
+
+```{r}
+i <- 1
+while (i < 6) {
+  print(i)
+  i = i+1
+}
+```
+
+
+##### break statement
+A `break` statement is used inside a loop (repeat, for, while) to stop the iterations and flow the control outside of the loop.
+
+In a nested looping situation, where there is a loop inside another loop, this statement exits from the innermost loop that is being evaluated.
+
+Syntax:
+```{r eval=FALSE}
+if (test_expression) {
+  break
+}
+```
+
+*Example*:
+In this example, we iterate over the vector `x`, which has consecutive numbers from 1 to 5.  Inside the for loop we have used a if `condition` to break if the current value is equal to 3.  As we can see from the output, the loop terminates when it encounters the `break` statement.
+
+```{r}
+x <- 1:5
+for (val in x) {
+  if (val == 3) {
+    break
+  }
+  print(val)
+}
+```
+
+
+##### next
+A `next` statement is useful when we want to skip the current iteration of a loop without terminating it. On encountering next, the R parser skips further evaluation and starts next iteration of the loop.
+
+Syntax:
+```{r eval=FALSE}
+if (test_condition) {
+  next
+}
+```
+
+*Example*:  
+In this example, we use the `next` statement inside a condition to check if the value is equal to 3.  If the value is equal to 3, the current evaluation stops (value is not printed) but the loop continues with the next iteration.  The output reflects this situation.
+
+```{r}
+x <- 1:5
+for (val in x) {
+  if (val==3) {
+    next
+  }
+  print(val)
+}
+```
+
+
+##### repeat
+A `repeat` loop is used to iterate over a block of code multiple number of times.  There is no condition check in repeat loop to exit the loop.  We must ourselves put a condition explicitly inside the body of the loop and use the `break` statement to exit the loop. Failing to do so will result into an infinite loop.
+
+Syntax:
+```{r}
+repeat{
+  statement
+}
+```
+
+*Example*:
+In the below example, we have used a condition to check and exit the loop when x takes the value of 6.  Hence, we see in our output that only values from 1 to 5 get printed.
+
+```{r}
+x <- 1
+repeat {
+  print(x)
+  x = x+1
+  if (x == 6){
+    break
+  }
+}
+```
+
+
+*Exercise* 
+Can you create a for loop that squares numbers starting at 2 until the square is greater than 100?
+
+```{r}
+
+```
+
+
+## 2.2 Functions in R
+
+Functions are used to logically break our code into simpler parts which become easy to maintain and understand.
+
+Syntax:
+```{r eval=FALSE}
+func_name <- function (argument) {
+  statement
+}
+```
+
+The reserved word `function` is used to declare a function in R.  The statements within the curly braces form the body of the function. These braces are optional if the body contains only a single expression.  Finally, this function object is given a name by assigning it to a variable, `func_name`.
+
+*Example*:
+
+Here, we created a function called `pow()`.  It takes two arguments, finds the first argument raised to the power of second argument and prints the result in appropriate format.  We have used a built-in function `paste()` which is used to concatenate strings.
+
+```{r}
+pow <- function(x, y) {
+  result <- x^y
+  print(paste(x, "raised to the power", y, "is", result))
+}
+```
+
+We can call the function as below.  Here, the arguments used in the function declaration (`x` and `y`) are called formal arguments and those used while calling the function are called actual arguments.
+
+In the function, the argument matching of formal argument to the actual arguments takes place in positional order.  This means that, in the call `pow(8,2)`, the formal arguments `x` and `y` are assigned `8` and `2` respectively.
+
+```{r}
+pow(8, 2)
+pow(2, 8)
+```
+
+Furthermore, we can use named and unnamed arguments in a single call.  In such case, all the named arguments are matched first and then the remaining unnamed arguments are matched in a positional order.
+
+```{r}
+pow(8, x=2)
+```
+
+
+##### default values for arguments
+To assign default values in functions, provide an appropriate value to the formal argument in the function declaration.
+
+The use of default value to an argument makes it optional when calling the function.
+
+*Example*:
+```{r}
+pow <- function(x, y = 2) {
+  result <- x^y
+  print(paste(x, "raised to the power", y, "is", result))
+}
+
+pow(3)
+pow(3, 1)
+```
+
+
+##### return value from function
+Many a times, we will require our functions to do some processing and return back the result. This is accomplished with the `return()` function in R.
+
+Syntax:
+```{r eval=FALSE}
+return(expression)
+```
+
+*Example*:
+```{r}
+check <- function(x) {
+if (2*x > 10) {
+result <- "x is more than 5"
+}
+else if (2*x < 10) {
+result <- "x is less than 5"
+}
+else {
+result <- "x is 5"
+}
+return(result)
+}
+
+check(1)
+check(5)
+check(6)
+```
+
+
+##### functions without return()
+If there are no explicit returns from a function, the value of the last evaluated expression is returned automatically in R.  If it is not the last statement of the function, it will prematurely end the function bringing the control to the place from which it was called.
+
+*Example*:
+In this above example, if 2*x > 10, the function immediately returns "x is more than 5" without evaluating rest of the body.
+
+```{r}
+check <- function(x) {
+if (2*x > 10) {
+result <- "x is more than 5"
+}
+else if (2*x < 10) {
+result <- "x is less than 5"
+}
+else {
+result <- "x is 5"
+}
+result
+}
+
+check(1)
+check(5)
+check(6)
+```
+
+
+##### multiple returns
+The `return()` function can return only a single object.  If we want to return multiple values in R, we can use a `list` (or other objects) and return it.
+
+*Example*:
+Here, we create a list `my_list` with multiple elements and return this single list.
+
+```{r}
+multi_return <- function() {
+my_list <- list("color" = "red", "size" = 20, "shape" = "round")
+return(my_list) 
+}
+a <- multi_return()
+a
+```
+
+
+##### Programming environment
+The top level environment available to us at the R command prompt is the global environment called `R_GlobalEnv`. **Global environment** can be referred to as `.GlobalEnv` in R codes as well.
+
+Global variables:  Global variables are those variables which exists throughout the execution of a program. It can be changed and accessed from any part of the program.
+
+Local variables:  On the other hand, Local variables are those variables which exist only within a certain part of a program like a function, and is released when the function call ends.
+
+We can use the `ls()` function to show what variables and functions are defined in the current environment. Moreover, we can use the `environment()` function to get the current environment.
+
+*Example*:
+In the example below, `a`, `b`, and `f` are in the global environment.  `x`, which is in the argument of the function, is not.  `f` the function creates a new environment within the global environment.
+
+```{r}
+a <- 2
+b <- 5
+f <- function(x) x<-0
+ls()
+environment()
+.GlobalEnv
+```
+
+Note:  R has lexical scoping, which means that when a variable is used but not defined in a current scope or in a current environment, R will look for the value of the variable in the first outer (i.e. parent) environment.  If it does not find the variable there, it will look for further environment (parent of the parent) and so on until R finds the value of the variable or until R hits the empty environment, in which case R will report an error.
+
+```{r}
+## Function that will show which environments will be checked and in which order
+
+search()
+```
+
+
+*Exercise*:
+Can you create 4 functions:  one that can add, one that can subtract, one to multiply and the last to divide using functions of variables x and y?
+
+```{r}
+
+```
+
+
+
+
+## 2.3 Basic Plots
+
+Several ways to produce plots are by using: </p>
+• base + graphics packages (which come with R) </p>
+• ggplot2 </p>
+• plotly </p>
+
+
+##### Bar Plots (2.9)
+Created using the `barplot()` function with some vector or matrix or data frame supplied.  If we supply a vector, the plot will have bars with their heights equal to the elements in the vector.
+
+Some of the frequently used argument to help the visual interface are:  `main` to give the title, `xlab` and `ylab` to provide labels for the axes, n`ames.arg` for naming each bar, `col` to define color etc.  We can also plot bars horizontally by providing the argument `horiz = TRUE`.  Argument `density =` will shade the bars.
+
+*Example*:
+Plot this week's temperature in Mesa using bar chart with heights representing the 1 day's maximum temperature.  Add title, x and y labels, colorcode and make horizontal.
+
+```{r}
+temps <- c(60, 68, 63, 60, 68, 69, 69)
+barplot(height=temps, 
+        main = "Maximum Temperatures in Mesa AZ 1/27-2/2",
+        xlab = "Degree F",
+        ylab = "Day",
+        names.arg = c("Wed", "Thu", "Fri", "Sat", "Sun", "Mon", "Tue"),
+        col = "blue", 
+        horiz = TRUE)
+```
+
+*Example*: Plotting categorical data we want to plot frequency on y axis and category on x axis.  Use `table()` to come up with this data from a vector of categorical data.
+
+```{r}
+age <- c(17, 18, 18, 17, 18, 19, 18, 16, 18, 18)
+table(age)
+
+barplot(table(age),
+        main = "Ages of 10 People",
+        xlab = "Age",
+        ylab = "Frequency",
+        border = "red",
+        col = "blue",
+        density = 10)
+```
+
+
+##### Higher dimension plots
+Consider the `Titanic` dataset and use the `margin.table()` function to sum the table entries for a specific index.
+
+```{r}
+head(Titanic, 2)
+margin.table(Titanic, 1) ## count according to class
+margin.table(Titanic, 4) ## count according to survival
+
+## use apply function to sum the marginals based on class (1) and survival (4)
+titanic <- apply(Titanic, c(4, 1), sum)
+```
+
+*Example*:
+Matrices will be plotted as stacked bar charts.
+
+```{r}
+## use the legend() function to appropriately display the legend.
+## can also specify `beside = TRUE' in the barplot() function to make the bars side-by-side
+
+barplot(titanic,
+        main = "Survival of Each Class",
+        xlab = "Class",
+        col = c("red","green"),
+ ##       beside = TRUE)
+)
+legend("topleft",
+       c("Not survived","Survived"),
+       fill = c("red","green"))
+```
+
+
+*Exercise*:
+Using `cars`VADeaths` dataset, plot the death rates of Female Urbans using the age group as the x axis and the height representing the death rate.  You may add axes and titles and change coloring if you wish.
+
+```{r}
+
+```
+
+
+##### Histograms
+
+Histogram can be created using the `hist()` function in R programming language. This function takes in a vector of values for which the histogram is plotted.
+
+
+*Example*: 
+Use the `ToothGrowth` dataset to build a histogram of tooth growth lengths.  Notice the default y axis is frequency.
+
+```{r}
+head(ToothGrowth, 2)
+len <- ToothGrowth$len
+hist(len)
+```
+
+Some of the frequently used parameters are:  `main` to give the title, `xlab` and `ylab` to provide labels for the axes, `xlim` and `ylim` to provide range of the axes, `col` to define color etc.  With the argument `freq = FALSE`, we can get the probability distribution instead of the frequency.
+
+
+*Example*:
+
+```{r}
+hist(len,
+     main = "Tooth Growth of Guinea Pigs",
+     xlab = "Growth",
+     ylab = "Relative Frequency",
+     col = "darkmagenta",
+     freq = FALSE)
+```
+
+We see that an object of class histogram is returned which has:
+-- breaks-places where the breaks occur,
+-- counts-the number of observations falling in that cell,
+-- density-the density of cells, mids-the midpoints of cells (sums to 1),
+-- xname-the x argument name and
+-- equidist-a logical value indicating if the breaks are equally spaced or not.
+
+```{r}
+h <- hist(len)
+h
+```
+
+We can use the data from `h` to add counts above the bars.
+
+*Example*:
+```{r}
+h <- hist(len)
+text(h$mids,h$counts,labels=h$counts, adj=c(0.5, -0.5))
+```
+
+Note:  With the `breaks` argument in the `hist()` function, we can specify the number of cells we want in the histogram. R calculates the "best" number of cells but you can change this if you wish.
+
+
+##### Binomial Distribution
+The binomial distribution describes the probability getting a certain numer of successes (k) from a set number of trials (n) given a probability for success (p).
+
+Shorthand: `X~Binom(n, p)`
+
+Functions:
+-- `dbinom` gives the density
+-- `pbinom` gives the distribution function
+-- `qbinom` gives the quantile function
+-- `rbinom` generates random deviates (i.e. picks n observations from the binomial random variable)
+
+*Example*:
+In 10 trials with probability of success 0.1, we say that random variable X has a Binomial distribution: X~Binom(n=10, p=0.1).
+
+```{r}
+## n = sample size, size = # of trials, prob = probability of success; i.e. we have groups of 10 and we count the # of successes and we repeat this process 50 times.
+## distribution is right skewed since we have smaller probability of this occuring
+
+x <- rbinom(n = 50,
+            size = 10,
+            prob = 0.1)
+hist(x, freq = FALSE, breaks = seq(from = -0.5, to = 10.5, by = 1))
+```
+
+
+*Exercise*:
+Create a density plot of the speed of cars in the base df called `cars` in R.  Make the histogram `darkgreen` and specify sqrt(n) bins.  You may add labels and a title as you see fit.
+
+```{r}
+
+```
+
+
+
+##### Pie Charts (2.9)
+
+Pie charts will have segments based on variables and the size of the segment will be based on that variable's proportion of the sample.  Pie chart is drawn using the `pie()` function in R programming . This function takes in a vector of non-negative numbers.
+
+Some of the frequently used parameters are: `labels` to give names to slices, `main` to add a title, `col` to define colors for the slices and `border` to color the borders.
+
+By default, the chart is drawn in anti-clockwise direction using pastel colors.  We can change this default by setting `clockwise = TRUE` to draw the chart in clockwise fashion.
+
+
+*Example*:
+Using default values
+
+```{r}
+cat <- c("Housing", "Food", "Clothes", "Entertainment", "Other")
+exp <- c(600, 300, 150, 100, 200)
+pie(exp, labels = cat)
+```
+
+
+*Example*:
+Changing defaults.
+
+```{r}
+pie(exp,
+    labels = cat,
+    main = "Monthly Expenditure Breakdown",
+    col = c("white", "grey", "black", "darkblue", "blue"),
+    border = "darkmagenta",
+    clockwise = TRUE)
+```
+
+
+
+## 2.6 Expected Value, Sample Mean; Variance, Sample Variance; KDE
+
+
+##### Measurement of Center
+The expected value is is a generalization of the weighted average, and is intuitively the arithmetic mean of a large number of independent realizations of X.
+
+Discrete case:  E[X] = muX = sum( (xi)*P(X=xi) ) from i = 1 to n
+Continuous case:  E[X] = muX = integral( x*f(x)dx ) from -infinity to infinity
+
+Note:  Estimate of population mean is the sample mean.
+
+In R use `mean()` to find the average.
+
+
+##### Measurement of Variation
+Variance is the weighted average of squared distances from the mean.  The more natural way to measure is average distance, so we take the square root of the variance to find the standard deviation.  The physical dimension of the standard deviation is the same as the original random variable.
+
+Discrete case: Var[X] = sigma^2X = sum( (xi-muX)^2 * P(X=xi) ) from i = 1 to n </p>
+Continuous case:  Var[X] = sigma^2X = integral( (x-muX)^2 * f(x)dx ) from -infinity to infinity
+
+Standard deviation (either case): sigmaX = sqrt(sigma^2X)
+
+Note:  Estimate of population variance is the sample variance.
+
+In R use `var()` to find the variance and `sd()` to find the standard deviation.  You can also use `sqrt(var())` to find the standard deviation.
+
+
+*Example*:
+
+```{r}
+x <- c(rep(10, 10), rep(15, 12), rep(9, 2), rep(8, 8))
+xbar <- mean(x); xbar
+s2 <- var(x); s2
+s <- sqrt(var(x)); s
+s <- sd(x); s
+```
+
+
+
+## 2.7 - 2.8: Boxplots
+
+##### Notes
+Boxplots show the variation/spread of datasets.  
+
+*Second Quartile (Q2)* or *"Median"*:
+The point that splits data into 2 halves
+
+*First quartile (Q1)*:
+The median of the lower half of the data.  Separates the lower 25% of the data from the upper 75% of the data
+
+*Third quartile (Q3)*:
+The median of the upper half of the data.  Separates the lower 75% of the data from the upper 25% of the data
+
+Note: 
+When splitting the two data in half and n is odd, there are two methods: inclusive (include median 2x) and exclusive (omit the median).
+
+Also note: 
+You can also use percentiles to divide the data which will be some part of 100% of the data.  In example, 5th percentile will have 5% of the data to the left and 95% of the data to the right.  You can divide data into k parts and call the divisions "quantiles." </p>
+
+Note:
+Unless there are outliers, the whiskers of the boxplot extend from first quartile to minimum and from third quartile to maximum.
+
+The boxplot will show the spread of the data.  In general:
+• If the median is to the right of the center of the boxplot, the data is skewed left
+• If the median is to the left of the center ofthe boxplot, the data is skewed right
+• If the median is directly in the center, the data is symmetric
+
+
+##### In R:
+In R, boxplot  (and whisker plot) is created using the `boxplot()` function.
+The `boxplot()` function takes in any number of numeric vectors, drawing a boxplot for each vector.
+
+Some of the frequently used parameters are: `main` to give the title, `xlab` and `ylab` to provide labels for the axes, `col` to define color etc.  Additionally, with the argument `horizontal = TRUE` we can plot the boxplot horizontally and with `notch = TRUE` we can add a notch to the box.
+
+
+*Example*:
+Create boxplot using the ozone variable from `airquality` data.
+
+```{r}
+air <- airquality
+head(air)
+ozone <- air$Ozone
+
+boxplot(ozone,
+        main = "Mean ozone in parts per billion at Roosevelt Island",
+        xlab = "Parts Per Billion",
+        ylab = "Ozone",
+        col = "orange",
+        border = "brown",
+        horizontal = TRUE,
+        notch = TRUE)
+```
+
+
+##### Return value of boxplot()
+
+```{r}
+b <- boxplot(ozone)
+b
+```
+
+As we can see above, a list is returned which has stats-having the position of the upper/lower extremes of the whiskers and box along with the median,
+
+-- n:  the number of observation the boxplot is drawn with (notice that NA‘s are not taken into account)
+-- conf:  upper/lower extremes of the notch
+-- out:  value of the outliers (as compared to conf)
+-- group:  a vector of the same length as out whose elements indicate to which group the outlier belongs
+-- names:  a vector of names for the groups.
+
+
+##### Computing quartiles by hand with quantile() function
+Syntax:
+```{r eval=FALSE}
+quantile(data, probs=seq(min, max, count))
+```
+
+*Example *:
+```{r}
+## include 0 (0%) and 1 (100%) for max and min
+## set na.rm = TRUE to remove the missing data
+
+quantile(ozone, probs = seq(0, 1, by=0.25), na.rm = TRUE)
+```
+
+Note:  Can also use the function summary() which will include the 5 number summary, the mean, and how many missing data values we have
+
+
+##### Advanced boxplots
+We can draw multiple boxplots in a single plot, by passing in a list, data frame or multiple vectors.
+
+The function `boxplot()` can also take in formulas of the form `y~x` where, `y` is a numeric vector which is grouped according to the value of `x`.
+
+*Example*:
+For example, in our dataset `airquality`, the `Solar.R` can be our numeric vector. `Month` can be our grouping variable, so that we get the boxplot for each month separately. In our dataset, month is in the form of number (1=January, 2-Febuary and so on).  Also included a legend using the `legend()` command after the close of the `boxplot()` command.
+
+```{r}
+boxplot(Solar.R~Month, data=air, horizontal=TRUE, 
+        col=c("darkblue", "blue", "darkgreen", "green", "white"))
+legend("topright", legend=c('may', 'june', 'july', 'aug', 'sept'),
+       fill=c("darkblue", "blue", "darkgreen", "green", "white"))
+```
+
+Notice in the above plot, July has a circle as its minimum and not connected to the boxplot.  This is considered an "outlier," i.e. an extreme point. Any value outside 1.5 of the interquartile range is considered an outlier. The distance between the first and third quartiles is the interquartile range.
+
+
+*Exercise*
+From `ToothGrowth` df can you make a stacked boxplot for length of tooth growth by supplement type?  May change colors or add title etc. at your own discretion.
+
+```{r}
+
+```
+
+
+
+##### Plot() function
+
+The most used plotting function in R programming is the `plot()` function. It is a generic function, meaning, it has many methods which are called according to the type of object passed to `plot()`.
+
+In the simplest case, we can pass in a vector and we will get a scatter plot of magnitude vs index. But generally, we pass in two vectors and a scatter plot of these points are plotted.
+
+We can add a title to our plot with the parameter `main`. Similarly, `xlab` and `ylab` can be used to label the x-axis and y-axis respectively.
+
+*Example*:
+
+```{r}
+x <- seq(-pi,pi,0.1)
+plot(x, sin(x),
+     main = "The Sine Function",
+     xlab = "x",
+     ylab = "sin(x)")
+```
+
+##### changing colors & plot type
+We can change the plot type with the argument `type`. It accepts the following strings and has the given effect.
+
+-- "p" - points
+-- "l" - lines
+-- "b" - both points and lines
+-- "c" - empty points joined by lines
+-- "o" - overplotted points and lines
+-- "s" and "S" - stair steps
+-- "h" - histogram-like vertical lines
+-- "n" - does not produce any points or lines
+
+
+*Example*:
+Revisited
+
+```{r}
+x <- seq(-pi,pi,0.1)
+plot(x, sin(x),
+     main = "The Sine Function",
+     xlab = "x",
+     ylab = "sin(x)",
+     type = "l",
+     col = "blue")
+```
+
+
+##### Overlaying Plots Using legend() function
+Calling `plot()` multiple times will have the effect of plotting the current graph on the same window replacing the previous one.  However, sometimes we wish to overlay the plots in order to compare the results.
+
+We can use funciton `lines()` to add a curve, `abline()` for a straight line, or `points()` for adding scatterplot.
+
+We have used the function `legend()` to appropriately display the legend. Visit legend() function to learn more.
+
+
+*Example*:
+Plot sin(x) vs. cos(x)
+
+```{r}
+plot(x, sin(x), 
+     main = "Overlaying Graphs", 
+     ylab = "", 
+     type = "l", col = "blue")
+lines(x, cos(x), col="red")
+legend("topleft", c("sin(x)","cos(x)"), fill = c("blue","red"))
+```
+
+
+*Exercise*:
+Using the base R data frame `ToothGrowth`, can you create a scatterplot based on the length of guinea pig tooth growth?  Make the x axis represent values 1:60 and the y axis measure the actual length of growth.  Use a dot and color code based on the type of supplement and include a legend to distinguish the colors.  Include title, labels, as you see fit.  Hint:  May need to include `xlim = c(min, max)` to fit everything in.
+
+```{r}
+
+```
+
+
+
+## 2.4 Normal distribution
+
+Normal distributions are bell-shaped and completely specified by their means and standard deviation.  If the mean is 0 and standard deviation is 1 then the distribution is called the standard normal distribution.  "Most" of the data will be between -4 and 4.
+
+Density formulas:
+For X~N(mu, sigma^2):  f(x) = 1/(sqrt(2(pi)(sigma^2))) * e^((-x-mu)^2/(2(pi)(sigma^2)))
+
+For Z~N(0,1):  f(x) = 1/sqrt(2pi) * e^(-x^2/2)
+
+Function to create random numbers from a normal distribution:
+
+Syntax:
+```{r eval=FALSE}
+rnorm(n, mean, sd)
+```
+
+*Example*:
+Exploring the shape of Normal distribution as sample size increases.
+Note: `set.seed()` function will allow the random numbers generated stay the same for each iteration.
+
+```{r}
+set.seed(12)
+
+## using sample size of 100
+x <- rnorm(n=100, mean=0, sd=1) 
+hist(x, 
+     breaks = 50, 
+     freq = FALSE,
+     xlim = c(-4,4))
+
+## using sample size 500
+x <- rnorm(n=500, mean=0, sd=1) 
+hist(x, 
+     breaks = 50, 
+     freq = FALSE, 
+     xlim = c(-4,4))
+```
+
+
+##### Side-by-side plots
+We can put multiple graphs in a single plot by setting some graphical parameters with the help of `par()` function. R programming has a lot of graphical parameters which control the way our graphs are displayed.
+
+Within the `par()` function, the graphical parameter `mfrow` can be used to specify the number of subplots we need.  It takes in a vector of form `c(m, n)` which divides the given plot into `m*n` array of subplots. For example, if we need to plot two graphs side by side, we would have `m=1` and `n=2`.
+
+`mfrow` fills in the subplot region row wise while `mfcol` fills it column wise.
+
+
+*Example 2*:
+Showing all plots for n = 100, 500, 1000 and 5000 together.  Use 2x2 subplots filled by row.
+
+```{r}
+x100 <- rnorm(n=100, mean=0, sd=1)
+x500 <- rnorm(n=500, mean=0, sd=1) 
+x1000 <- rnorm(n=1000, mean=0, sd=1) 
+x5000 <- rnorm(n=5000, mean=0, sd=1) 
+
+par(mfrow=c(2,2))
+hist(x100, breaks = 50, freq = FALSE, xlim = c(-4,4))
+hist(x500, breaks = 50, freq = FALSE, xlim = c(-4,4))
+hist(x1000, breaks = 50, freq = FALSE, xlim = c(-4,4))
+hist(x5000, breaks = 50, freq = FALSE, xlim = c(-4,4))
+```
+
+
+
+## 2.10:  Colors
+
+Use `col` parameter to control color in functions like `plot()`, `hist()`, `pie()`, etc.
+
+You can specify red, green and blue (RGB) components of the color you want.  The intensity of RGB components can be given either in decimal or hexidecimal system.  For decimal representation, you can use rgb() function:
+
+`rgb(red = , green = , blue = , alpha = , names = NULL, maxColorValue = 1)`
+-- alpha = measures opacity from 0 to maxColorValue i.e. if alpha = .10 then 10% opacity is used
+
+*Example*:
+Representing RGB with numbers between [0, 1] so using default maxColorValue = 1
+Specifying red = 1, green = 0, blue = 1, alpha = 0.1 e.g. maximum red, maximum blue and no green; gives us magenta color with 10% opacity
+
+```{r}
+hist(mtcars$mpg, 
+     breaks = 12, 
+     freq = FALSE,
+     col = rgb(red = 1, gren = 0, blue = 1, alpha = 0.1))
+```
+
+
+*Example*:
+Representing RGB using integers from (0, 255); use `maxColorValue = 225`
+256=2^8 integers in total which means we use 1 byte of memory for intensity for each of the three RGB colors
+
+```{r}
+hist(mtcars$mpg, 
+     breaks=12, 
+     freq=FALSE,
+     col=rgb(red = 10, 
+             green = 25, 
+             blue = 60, 
+             alpha = 130.9, 
+             maxColorValue = 225))
+```
+
+You can also express intensity of RGB colors in hexadecimal system.  Recall that the digits in hexadecimal system are 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F.  The notation for color in hexadecimal(16) system starts with # followed by two hexadecimal digits for Red, followed by two hexadecimal digits for Green and then two hexadecimal digits for Blue. </p>
+
+Maroon: RGB = (140, 29, 64) where each intensity is out of 255
+
+How did we get this?
+(140)[10] = (1*10^2 + 4*10^1 + 0*10^0)[10] = (8*16^1 + 12*16^0) = (8C)[16]
+Since 8 is 8 and 12 is C
+
+(29)[10] = (2*10^1 + 9*10^0)[10] = (1*16^1 + 13*16^0) = (1D)[16]
+Since 1 is 1 and 13 is D
+
+(64)[10] = (6*10^1 + 4*10^0)[10] = (4*16^1 + 0*16^0) = (40)[16]
+Ssince 4 is 4 and 0 is 0 
+
+So maroon is "#8C1D40".
+
+Check:  Gold = (225, 198, 39) = "#FFC627"
+
+
+
+## 2.11:  Apply-Family Part 1
+
+Apply-family is a family of functions in base R used for data manipulation.
+Notes from Johns Hopkins: http://github.com/DataScienceSpecialization/courses/tree/master/02_RProgramming
+
+Used when you want to evaluate a function over the margins of an array.
+-- Used most often to apply a function to the rows or columns of a matrix
+-- Used with general arrays (any array of a matrix)
+-- Not really faster than writing a loop but works like one
+
+
+##### apply
+
+Syntax:
+```{r eval=FALSE}
+function(X, MARGIN, FUN, ...)
+```
+
+-- X is an array
+-- MARGIN is an integer vector indicating which margins should be retained
+-- FUN is the name of the function to be applied
+
+*Example*:
+
+```{r}
+m <- matrix(1:9, nrow=3, byrow=TRUE); m[2, 2] <- -1
+m
+
+## remember matrix has 2 dimensions - first dimension is row, second is column
+
+apply(X = m, MARGIN = 1, FUN=sum)  ## summing by the rows (MARGIN = 1)
+apply(X = m, MARGIN = 2, FUN=mean) ## averaging by the columns (MARGIN = 2)
+```
+
+For sums and means of matrix dimensions, we have shortcuts:
+-- rowSums(x) does the same as apply(x, 1, sum)
+-- colSums(x) does the same as apply(x, 2, sum)
+-- rowMeans(x) does the same as apply(x, 1, mean)
+-- colMeans(x) does the same as apply(x, 2, mean)
+
+
+##### lapply
+lapply returns a list of the same length as X, each element of which is the result of applying FUN to the corresponding element of X.
+
+Syntax:
+```{r eval=FALSE}
+function(X, MARGIN, FUN, ...)
+```
+
+-- X is an array (commonly a list)
+-- FUN is the name of the function to be applied to the components of the array
+
+*Example*:
+```{r}
+set.seed(1234)
+x <- list(a=1:5, b=rnorm(10)); x
+lapply(x, mean)
+```
+
+
+##### sapply
+sapply will try to simplify the result of lapply if possible:
+-- If result is a list where every element has length 1 then a vector is returned
+-- If result is a list where every element is a vector of the same length the a matrix is returned
+-- If it can't figure it out then a list is returned
+
+Syntax:
+```{r eval=FALSE}
+function(X, MARGIN, FUN, ..., simplify = TRUE, USE.NAMES = TRUE)
+```
+
+--X is an array
+--FUN is the name of the function to be applied
+
+
+*Example*:
+
+```{r}
+x <- list(a = 1:4, b = rnorm(10), c = rnorm(20, 1), d = rnorm(100, 5)); x
+s <- sapply(x, mean) ## find the mean of each component a:d of list x
+s
+str(s)
+is.vector(s)
+```
+
+
+##### mapply
+mapply is a multivariate apply which applies a function in parallel over a set of arguments
+
+Syntax:
+```{r eval=FALSE}
+function(FUN, ..., MoreArgs = NULL, SIMPLIFY = TRUE, USE.NAMES = TRUE)
+```
+
+-- FUN is a function to apply
+-- MoreArgs is a list of other arguments to FUN
+-- SIMPLIFY indicates whether the result should be simplified
+
+*Example*:
+If you want: list(rep(1, 4), rep(2, 3), rep(3, 2), rep(4, 1)) you can use mapply:
+
+```{r}
+mapply(rep, 1:4, 4:1)
+```
+
+
+##### tapply
+tapply is used to apply a function over subsets of a vector
+
+Syntax:
+```{r eval=FALSE}
+function(X, INDEX, FUN=NULL, ..., default=NA, simplify=TRUE)
+```
+
+-- X is a vector
+-- INDEX is a factor or a list of factors (or else coerced to factors) in which you group data in X
+-- FUN is a function to apply
+-- SIMPLIFY indicates whether the result should be simplified
+
+*Example*:
+
+```{r}
+df <- data.frame(c(7, 1, 3, 4, 2, 17), c("Feb", "Apr", "May", "Feb", "Apr", "Apr"))
+colnames(df) <- c("hours", "month")
+df
+
+##  sum hours based on month
+tapply(X = df$hours, INDEX = df$month, FUN = sum)
+```
+
+
+##### Split
+split takes a vector or other objects and splits it into groups determined by a factor/level of list of factors
+
+Syntax:
+```{r eval=FALSE}
+function(x, f, drop=FALSE, ...)
+```
+
+-- x is a vector or list or data frame
+-- f is a vector or a list of factors/levels
+-- drop indicates whether empty factors/levels should be dropped
+
+*Example*:
+Splitting a df
+
+```{r}
+library(datasets)
+head(airquality)
+s <- split(airquality, airquality$Month); s
+```
+
+
+*Exercise*
+Using the airquality data, can you find the mean for the variables Ozone, Solar.R and Wind?  Broken up by month?
+
+```{r}
+
+```
